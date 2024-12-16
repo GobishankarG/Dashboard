@@ -1,0 +1,77 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Basic Table</h4>
+                        <p class="card-description"> Add class <code>.table</code>
+                        </p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Product</th>
+                                        <th>Sales</th>
+                                        <th>Amount</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in data %}
+                                    <tr>
+                                        <td>{{ i.user }}</td>
+                                        <td>{{ i.product }}</td>
+                                        <td>{{ i.sales }}</td>
+                                        <td>{{ i.amount }}</td>
+                                        <td><a class="btn btn-success btn-sm text-white" href="/update_page/{{ i.id }}">Update</a></td>
+                                        <td><a class="btn btn-danger btn-sm text-white" href="/delete/{{ i.id }}">Delete</a></td>
+                                        <!-- <td><label class="badge badge-danger">Pending</label></td> -->
+                                    </tr>
+                                    {% empty %}
+                                    
+                                    <td colspan="4">No Data</td>
+                                    
+                                    {% endfor %}
+                                    <!-- <tr>
+                                        <td>Messsy</td>
+                                        <td>53275532</td>
+                                        <td>15 May 2017</td>
+                                        <td><label class="badge badge-warning">In progress</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>John</td>
+                                        <td>53275533</td>
+                                        <td>14 May 2017</td>
+                                        <td><label class="badge badge-info">Fixed</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Peter</td>
+                                        <td>53275534</td>
+                                        <td>16 May 2017</td>
+                                        <td><label class="badge badge-success">Completed</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dave</td>
+                                        <td>53275535</td>
+                                        <td>20 May 2017</td>
+                                        <td><label class="badge badge-warning">In progress</label></td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

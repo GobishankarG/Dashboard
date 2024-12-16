@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Default form</h4>
+            <p class="card-description"> Basic form layout </p>
+            <form class="forms-sample" action="/update_page/{{ data.id }}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="User">User</label>
+                    <input type="text" class="form-control" id="User" placeholder="User" name="user" value="{{ data.user }}">
+                </div>
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <input type="text" class="form-control" id="product" placeholder="Product" name="product" value="{{ data.product }}">
+                </div>
+                <div class="form-group">
+                    <label for="sales">Sales</label>
+                    <input type="text" class="form-control" id="sales" placeholder="Sales" name="sales" value="{{ data.sales }}">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="text" class="form-control" id="amount" placeholder="Amount" name="amount" value="{{ data.amount }}">
+                </div>
+                <!-- <div class="form-check">
+                    <label class="form-check-label text-muted">
+                        <input type="checkbox" class="form-check-input" >
+                        <a href="#">Remember me</a>
+                        <i class="input-helper"></i></label>
+                </div> -->
+                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                <button class="btn btn-light">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
