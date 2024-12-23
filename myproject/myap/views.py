@@ -2,29 +2,41 @@ from django.shortcuts import render, redirect
 from .models import details_table, register_table
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
+from functools import wraps
+
 
 
 
 # Create your views here.
-def index(request):
-    return render(request, "index.html")
+def session_required(view_func):
+    @wraps(view_func)
+    def wrapped_view(request, *args, **kwargs):
+        if not request.session.get('is_logged_in'):
+            return redirect('login')
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
+
+@session_required
+def dashboard(request):
+    # username_r = request.session.get('username')
+    return render(request, "dashboard.html")
 
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
-        print(username)
+        # print(username)
         email = request.POST['email']
-        print(email)
-        country = request.POST['country']
-        print(country)
+        # print(email)
+        # country = request.POST['country']
+        # print(country)
         password = request.POST['password']
-        print(password)
+        # print(password)
 
         if register_table.objects.filter(username=username).exists():
             messages.error(request,"Username already exist.")
-            return redirect('register')
+            return redirect('login')
         
-        registers = register_table(username=username, email=email, country=country, password=password)
+        registers = register_table(username=username, email=email, password=password)
         registers.save()
         messages.success(request, 'Registration successful Please log in.')
         return redirect("login")
@@ -32,56 +44,79 @@ def register(request):
     return render(request, "register.html")
 
 def login(request):
+    # print('Login function')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST["password"]
+        # print(username,password)
 
-        # if register_table.objects.filter(username=username, password=password):
-        #     return redirect("index.html") 
-        # messages.MessageFailure("Username or Password is incorrect")
+        try:
+            # print('try block')
+            user = register_table.objects.get(username=username)
+            if user.password == password:
+                request.session['username']=username
+                request.session['is_logged_in'] = True
+                # print('try condition if statement')
+                return redirect("dashboard")
+            else:
+                # print('try condition else statement')
+                messages.error(request,"Invalid password.")
+        except register_table.DoesNotExist:
+            # print('except block')
+            messages.error(request, "User not found.")
+            
+    return render(request, "login.html")
 
-        # try:
-        #     user = register_table.objects.get(username=username)
+@session_required
+def logout(request):
+    request.session.flush()
+    return redirect('login')
 
-        #     if check_password(password, user.password):
-        #         request.session['user_id'] = user.id
-        #         return redirect('')
-    return render(request, "register.html")
-
-
+@session_required
 def table(request):
     return render(request, "table.html")
 
+@session_required
 def buttons(request):
     return render(request, "buttons.html")
 
+@session_required
 def dropdowns(request):
     return render(request, "dropdowns.html")
 
+@session_required
 def typography(request):
     return render(request, "typography.html")
 
+@session_required
 def basic_elements(request):
     return render(request, "basic_elements.html")
 
+@session_required
 def chartjs(request):
     return render(request, "chartjs.html")
 
+@session_required
 def mdi(request):
     return render(request, "mdi.html")
 
+@session_required
 def error_404(request):
     return render(request, "error_404.html")
 
+@session_required
 def error_500(request):
     return render(request, "error_500.html")
 
+@session_required
 def form(request):
     return render(request, "form.html")
 
+@session_required
 def view_data(request):
     return render(request, "view_data.html")
 
+@session_required
 def save_data(request):
     if request.method == 'POST':
         user = request.POST["user"]
@@ -92,18 +127,21 @@ def save_data(request):
         # print(sales)
         amount = request.POST["amount"]
         # print(amount)
+        username=request.session["username"]
 
-        tables = details_table(user=user, product=product, sales=sales, amount=amount)
+        tables = details_table(user=user, product=product, sales=sales, amount=amount, username=username)
         tables.save()
         return render(request, "form.html")
     return render(request, "form.html")
 
-
+@session_required
 def view_data(request):
     data = details_table.objects.all()
-    print(data,'This is data')
+    # print(data,'This is data')
+    # is_admin = request.user.is_staff
     return render(request, "view_data.html", {'data':data})
 
+@session_required
 def update_page(request, id):
     if request.method == "POST":
         user = request.POST["user"]
@@ -117,21 +155,22 @@ def update_page(request, id):
         data.amount = amount
         data.save()
         data = details_table.objects.all()
-        print(data,'This is data')
+        # print(data,'This is data')
         return render(request, "view_data.html", {'data':data})
     else:
         data = details_table.objects.get(id=id)
-        print(data)
+        # print(data)
         return render(request, "update_page.html", {'data':data})
-    
+
+@session_required
 def delete(request, id):
     data = details_table.objects.get(id=id)
     data.delete()
     data1 = details_table.objects.all()
-    print(data,'This is data')
+    # print(data,'This is data')
     return render(request, "view_data.html", {'data':data1})
 
-
+@session_required
 def delete_multiple_items(request):
     if request.method == "POST":
         selected_ids = request.POST.getlist('selected_items')  # Get list of selected IDs
