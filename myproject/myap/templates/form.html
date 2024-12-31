@@ -2,28 +2,36 @@
 
 
 {% block content %}
-<div class="col-md-12 grid-margin stretch-card">
+<div class="col-md-12 grid-margin pt-5">
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Get data</h4>
             <form class="forms-sample" action="/save_data" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="form-group col-md-8">
                     <label for="User">User</label>
                     <input type="text" class="form-control" id="User" placeholder="User" name="user">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-8">
                     <label for="product">Product</label>
                     <input type="text" class="form-control" id="product" placeholder="Product" name="product">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-8">
                     <label for="sales">Sales</label>
                     <input type="text" class="form-control" id="sales" placeholder="Sales" name="sales">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-8">
                     <label for="amount">Amount</label>
                     <input type="text" class="form-control" id="amount" placeholder="Amount" name="amount">
                 </div>
+                <!-- <div class="form-group">
+                    <label for="cur_date">Date</label>
+                    <input type="date" class="form-control" id="cur_date" placeholder="Date" name="cur_date">
+                </div>
+                <div class="form-group">
+                    <label for="cur_time">Time</label>
+                    <input type="time" class="form-control" id="cur_time" placeholder="Time" name="cur_time">
+                </div> -->
                 <div class="form-check">
                     <label class="form-check-label text-muted">
                         <input type="checkbox" class="form-check-input" >

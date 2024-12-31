@@ -8,6 +8,9 @@ class details_table(models.Model):
     sales = models.FloatField(max_length=10)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     username = models.CharField(max_length=20, null=True, blank=True)
+    cur_date = models.DateField(auto_now_add=True, null=True)
+    cur_time = models.TimeField(auto_now=True, null=True)
+
 
 
 

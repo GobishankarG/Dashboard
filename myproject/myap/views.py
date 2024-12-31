@@ -3,6 +3,8 @@ from .models import details_table, register_table
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from functools import wraps
+from datetime import datetime
+from django.db.models import Q
 
 
 
@@ -15,11 +17,6 @@ def session_required(view_func):
             return redirect('login')
         return view_func(request, *args, **kwargs)
     return wrapped_view
-
-@session_required
-def dashboard(request):
-    # username_r = request.session.get('username')
-    return render(request, "dashboard.html")
 
 def register(request):
     if request.method == 'POST':
@@ -71,6 +68,12 @@ def login(request):
 def logout(request):
     request.session.flush()
     return redirect('login')
+
+@session_required
+def dashboard(request):
+    # username_r = request.session.get('username')
+    # return render(request, "dashboard.html" /*, {'username':username_r}*/ )
+    return render(request, "dashboard.html")
 
 @session_required
 def table(request):
@@ -128,8 +131,14 @@ def save_data(request):
         amount = request.POST["amount"]
         # print(amount)
         username=request.session["username"]
+        cur_date = datetime.now().date()
+        cur_time = datetime.now().strftime('%H:%M:%S')
+        # print(cur_date,'This is date')
+        # print(cur_time,'This is time')
 
-        tables = details_table(user=user, product=product, sales=sales, amount=amount, username=username)
+        tables = details_table(user=user, product=product, sales=sales, amount=amount, username=username, cur_date=cur_date, cur_time=cur_time)
+        print(tables,'This is tables')
+
         tables.save()
         return render(request, "form.html")
     return render(request, "form.html")
@@ -138,8 +147,24 @@ def save_data(request):
 def view_data(request):
     data = details_table.objects.all()
     # print(data,'This is data')
+    # for i in data:
+    #     print(i.user)
+    #     print(i.cur_date)
+    #     print(i.cur_time)
     # is_admin = request.user.is_staff
-    return render(request, "view_data.html", {'data':data})
+    search_query = request.GET.get('search', '')
+    # data = details_table.objects.filter(user__icontains=search_query)
+    if search_query:
+        data = details_table.objects.filter(
+            Q(user__icontains=search_query) |
+            Q(product__icontains=search_query) |
+            Q(sales__icontains=search_query) |
+            Q(amount__icontains=search_query) |
+            Q(username__icontains=search_query)
+            )
+    else:
+        data = details_table.objects.all()
+    return render(request, "view_data.html", {'data':data, 'search_query': search_query})
 
 @session_required
 def update_page(request, id):
