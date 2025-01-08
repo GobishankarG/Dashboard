@@ -154,16 +154,16 @@ def view_data(request):
     # is_admin = request.user.is_staff
     search_query = request.GET.get('search', '')
     # data = details_table.objects.filter(user__icontains=search_query)
-    if search_query:
-        data = details_table.objects.filter(
-            Q(user__icontains=search_query) |
-            Q(product__icontains=search_query) |
-            Q(sales__icontains=search_query) |
-            Q(amount__icontains=search_query) |
-            Q(username__icontains=search_query)
-            )
-    else:
-        data = details_table.objects.all()
+    # if search_query:
+    data = details_table.objects.filter(
+        Q(user__icontains=search_query) |
+        Q(product__icontains=search_query) |
+        Q(sales__icontains=search_query) |
+        Q(amount__icontains=search_query) |
+        Q(username__icontains=search_query)
+        )
+    # else:
+    #     data = details_table.objects.all()
     return render(request, "view_data.html", {'data':data, 'search_query': search_query})
 
 @session_required
