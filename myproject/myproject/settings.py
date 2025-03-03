@@ -83,14 +83,17 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Dashboard',
-        'USER': 'root',
-        'PASSWORD': '',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '5432',
     }
 }
+
+
+AUTH_USER_MODEL = 'myap.CustomUser'
 
 
 # Password validation

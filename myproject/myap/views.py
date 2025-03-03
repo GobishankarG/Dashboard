@@ -7,8 +7,6 @@ from datetime import datetime
 from django.db.models import Q
 
 
-
-
 # Create your views here.
 def session_required(view_func):
     @wraps(view_func)
@@ -28,11 +26,9 @@ def register(request):
         # print(country)
         password = request.POST['password']
         # print(password)
-
         if register_table.objects.filter(username=username).exists():
             messages.error(request,"Username already exist.")
-            return redirect('login')
-        
+            return redirect('login')       
         registers = register_table(username=username, email=email, password=password)
         registers.save()
         messages.success(request, 'Registration successful Please log in.')
@@ -46,7 +42,6 @@ def login(request):
         username = request.POST['username']
         password = request.POST["password"]
         # print(username,password)
-
         try:
             # print('try block')
             user = register_table.objects.get(username=username)
@@ -198,22 +193,11 @@ def delete(request, id):
 @session_required
 def delete_multiple_items(request):
     if request.method == "POST":
-        selected_ids = request.POST.getlist('selected_items')  # Get list of selected IDs
+        selected_ids = request.POST.getlist('selected_items')       # Get list of selected IDs
         details_table.objects.filter(id__in=selected_ids).delete()  # Delete selected items
         data1 = details_table.objects.all()
         
         return render(request, "view_data.html", {'data':data1})
-    
-
-
-
-
-
-
-
-
-
-
 
 
 # def update_person(request, person_id):
